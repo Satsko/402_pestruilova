@@ -1,0 +1,285 @@
+﻿<Window x:Class="Client.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Client"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="600" Width="800" Background="#838e95">
+    <Window.Resources>
+        <DataTemplate x:Key="ItemTemplate">
+
+            <Image Name="image" Source= "{Binding Path=path}" HorizontalAlignment="Center" Width="125" />
+        </DataTemplate>
+        <Style x:Key="Big_img">
+            <Setter Property="ItemsControl.VerticalAlignment" Value="Top"/>
+            <Setter Property="ItemsControl.HorizontalAlignment" Value="Center"/>
+            <Setter Property="ItemsControl.Margin" Value="5,10,5,10"/>
+            <Setter Property="ItemsControl.Height" Value="200"/>
+            <Setter Property="ItemsControl.Width" Value="200"/>
+        </Style>
+        <Style x:Key="Img_info">
+            <Setter Property="ItemsControl.FontFamily" Value="Verdana"/>
+            <Setter Property="ItemsControl.FontWeight" Value="Light"/>
+            <Setter Property="ItemsControl.FontSize" Value="14"/>
+            <Setter Property="ItemsControl.Foreground" Value="#222323"/>
+            <Setter Property="ItemsControl.VerticalAlignment" Value="Top"/>
+            <Setter Property="ItemsControl.HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="ItemsControl.Margin" Value="20,220,5,10"/>
+            <Setter Property="ItemsControl.Height" Value="220"/>
+        </Style>
+        <Style x:Key="Btn">
+            <Setter Property="ItemsControl.FontFamily" Value="Verdana"/>
+            <Setter Property="ItemsControl.FontWeight" Value="Medium"/>
+            <Setter Property="ItemsControl.FontSize" Value="14"/>
+            <Setter Property="ItemsControl.Foreground" Value="#222323"/>
+            <Setter Property="ItemsControl.Background" Value="#eaeaee"/>
+            <Setter Property="ItemsControl.VerticalAlignment" Value="Top"/>
+            <Setter Property="ItemsControl.HorizontalAlignment" Value="Left"/>
+            <Setter Property="ItemsControl.Height" Value="30"/>
+            <Setter Property="ItemsControl.Width" Value="120"/>
+            <Setter Property="ItemsControl.BorderBrush" Value="#838e95"/>
+            <Setter Property="ItemsControl.BorderThickness" Value="0,0,1,0"/>
+        </Style>
+    </Window.Resources>
+    <Grid HorizontalAlignment="Stretch"  VerticalAlignment="Stretch">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="60*"/>
+            <ColumnDefinition Width="40*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30" />
+            <RowDefinition Height="100*"/>
+            <RowDefinition Height="30" />
+        </Grid.RowDefinitions>
+        <Grid HorizontalAlignment="Stretch" Background="#eaeaee" Grid.ColumnSpan="2">
+            <Button Content="Add images" Click="Open_btn_click" Name="Add_btn" Style="{StaticResource Btn}"/>
+            <Button Content="Delete all data" Click="Clear_btn_click" Name="Clear_btn" Grid.Row="0" Margin="360,0,0,0" Style="{StaticResource Btn}"/>
+            <Button Content="Analysis" Click="Analysis_btn_click" Name="Analysis_btn" Margin="120,0,0,0" Style="{StaticResource Btn}"/>
+            <Button Content="Cancel" Click="Cancel_btn_click" Name="Cancel_btn" Margin="0,0,0,0" BorderThickness="1,0,0,0" HorizontalAlignment="Right" Style="{StaticResource Btn}"/>
+            <Button Content="Show ID" Click="AllID_btn_click" Name="AllID_btn" Margin="240,0,0,0" Style="{StaticResource Btn}"/>
+        </Grid>
+        <TabControl Name="tabControl" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Row="1" Grid.ColumnSpan="2" Background="#838e95" BorderThickness="0" Margin="0">
+            <TabControl.Resources>
+                <Style TargetType="TabItem">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="TabItem">
+                                <Grid Name="Panel" HorizontalAlignment="Stretch">
+                                    <ContentPresenter x:Name="ContentSite"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                        ContentSource="Header"
+                                        Margin="10,0"
+                                        />
+                                </Grid>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter TargetName="Panel" Property="Background" Value="#838e95"/>
+                                        <Setter Property="Foreground" Value="#eaeaee"/>
+                                        <Setter Property="FontWeight" Value="Thin"/>
+                                        <Setter Property="FontFamily" Value="Verdana"/>
+                                        <Setter Property="FontSize" Value="11.5"/>
+                                    </Trigger>
+                                    <Trigger Property="IsSelected" Value="False">
+                                        <Setter TargetName="Panel" Property="Background" Value="#eaeaee" />
+                                        <Setter Property="FontWeight" Value="Light"/>
+                                        <Setter Property="FontFamily" Value="Verdana"/>
+                                        <Setter Property="FontSize" Value="11"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </TabControl.Resources>
+
+            <TabItem Header="All images" Height="30" Width="80" Margin="2,1,2,1">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="60*"/>
+                        <ColumnDefinition Width="40*"/>
+                    </Grid.ColumnDefinitions>
+                    <ListView Name="lst" ItemsSource="{Binding}" ItemTemplate="{StaticResource ItemTemplate}" Visibility="Hidden"
+                        ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Column="0" BorderThickness="0,0,4,0" BorderBrush="#838e95" Background="#eaeaee">
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel IsItemsHost="True" Orientation="Horizontal"  />
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                    </ListView>
+                    <ListBox Name="Check" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" ItemsSource="{Binding}" Background="#eaeaee"/>
+                    <Grid Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="#eaeaee">
+                        <TextBlock Text="{Binding ElementName=lst, Path=SelectedItem.get_res}" Grid.Column="1" Style="{StaticResource Img_info}" Visibility="Hidden"/>
+                        <Image  Source= "{Binding ElementName=lst, Path=SelectedItem.path}" Grid.Column="1" Style="{StaticResource Big_img}"/>
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Contempt" Height="30" Width="80" Margin="2,1,2,1">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="60*"/>
+                        <ColumnDefinition Width="40*"/>
+                    </Grid.ColumnDefinitions>
+                    <ListView Name="lst_contempt" ItemsSource="{Binding}" ItemTemplate="{StaticResource ItemTemplate}"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Column="0" BorderThickness="0,0,3,0" BorderBrush="#838e95" Background="#eaeaee">
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel IsItemsHost="True" Orientation="Horizontal"  />
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                    </ListView>
+                    <Grid Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="#eaeaee">
+                        <TextBlock Text="{Binding ElementName=lst_contempt, Path=SelectedItem.get_res}" Grid.Column="1" Style="{StaticResource Img_info}"/>
+                        <Image  Source= "{Binding ElementName=lst_contempt, Path=SelectedItem.path}" Grid.Column="1" Style="{StaticResource Big_img}"/>
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Fear" Height="30" Width="80" Margin="2,1,2,1">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="60*"/>
+                        <ColumnDefinition Width="40*"/>
+                    </Grid.ColumnDefinitions>
+                    <ListView Name="lst_fear" ItemsSource="{Binding}" ItemTemplate="{StaticResource ItemTemplate}"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Column="0" BorderThickness="0,0,3,0" BorderBrush="#838e95" Background="#eaeaee">
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel IsItemsHost="True" Orientation="Horizontal"  />
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                    </ListView>
+                    <Grid Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="#eaeaee">
+                        <TextBlock Text="{Binding ElementName=lst_fear, Path=SelectedItem.get_res}" Grid.Column="1" Style="{StaticResource Img_info}"/>
+                        <Image  Source= "{Binding ElementName=lst_fear, Path=SelectedItem.path}" Grid.Column="1" Style="{StaticResource Big_img}"/>
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Disgust" Height="30" Width="80" Margin="2,1,2,1">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="60*"/>
+                        <ColumnDefinition Width="40*"/>
+                    </Grid.ColumnDefinitions>
+                    <ListView Name="lst_disgust" ItemsSource="{Binding}" ItemTemplate="{StaticResource ItemTemplate}"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Column="0" BorderThickness="0,0,3,0" BorderBrush="#838e95" Background="#eaeaee">
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel IsItemsHost="True" Orientation="Horizontal"  />
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                    </ListView>
+                    <Grid Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="#eaeaee">
+                        <TextBlock Text="{Binding ElementName=lst_disgust, Path=SelectedItem.get_res}" Grid.Column="1" Style="{StaticResource Img_info}"/>
+                        <Image  Source= "{Binding ElementName=lst_disgust, Path=SelectedItem.path}" Grid.Column="1" Style="{StaticResource Big_img}"/>
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Anger" Height="30" Width="80" Margin="2,1,2,1">
+                <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="60*"/>
+                        <ColumnDefinition Width="40*"/>
+                    </Grid.ColumnDefinitions>
+                    <ListView Name="lst_anger" ItemsSource="{Binding}" ItemTemplate="{StaticResource ItemTemplate}"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Column="0" BorderThickness="0,0,3,0" BorderBrush="#838e95" Background="#eaeaee">
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel IsItemsHost="True" Orientation="Horizontal"  />
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                    </ListView>
+                    <Grid Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="#eaeaee">
+                        <TextBlock Text="{Binding ElementName=lst_anger, Path=SelectedItem.get_res}" Grid.Column="1" Style="{StaticResource Img_info}"/>
+                        <Image  Source= "{Binding ElementName=lst_anger, Path=SelectedItem.path}" Grid.Column="1" Style="{StaticResource Big_img}"/>
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Sadness" Height="30" Width="80" Margin="2,1,2,1">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="60*"/>
+                        <ColumnDefinition Width="40*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <ListView Name="lst_sadness" ItemsSource="{Binding}" ItemTemplate="{StaticResource ItemTemplate}"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Column="0" BorderThickness="0,0,3,0" BorderBrush="#838e95" Background="#eaeaee">
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel IsItemsHost="True" Orientation="Horizontal"  />
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                    </ListView>
+                    <Grid Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="#eaeaee">
+                        <TextBlock Text="{Binding ElementName=lst_sadness, Path=SelectedItem.get_res}" Grid.Column="1" Style="{StaticResource Img_info}"/>
+                        <Image  Source= "{Binding ElementName=lst_sadness, Path=SelectedItem.path}" Grid.Column="1" Style="{StaticResource Big_img}"/>
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Surprise" Height="30" Width="80" Margin="2,1,2,1">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="60*"/>
+                        <ColumnDefinition Width="40*"/>
+                    </Grid.ColumnDefinitions>
+                    <ListView Name="lst_surprise" ItemsSource="{Binding}" ItemTemplate="{StaticResource ItemTemplate}"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Column="0" BorderThickness="0,0,3,0" BorderBrush="#838e95" Background="#eaeaee">
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel IsItemsHost="True" Orientation="Horizontal"  />
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                    </ListView>
+                    <Grid Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="#eaeaee">
+                        <TextBlock Text="{Binding ElementName=lst_surprise, Path=SelectedItem.get_res}" Grid.Column="1" Style="{StaticResource Img_info}"/>
+                        <Image  Source= "{Binding ElementName=lst_surprise, Path=SelectedItem.path}" Grid.Column="1" Style="{StaticResource Big_img}"/>
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Happiness" Height="30" Width="80" Margin="2,1,2,1">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="60*"/>
+                        <ColumnDefinition Width="40*"/>
+                    </Grid.ColumnDefinitions>
+                    <ListView Name="lst_happiness" ItemsSource="{Binding}" ItemTemplate="{StaticResource ItemTemplate}"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Column="0" BorderThickness="0,0,3,0" BorderBrush="#838e95" Background="#eaeaee">
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel IsItemsHost="True" Orientation="Horizontal"  />
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                    </ListView>
+                    <Grid Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="#eaeaee">
+                        <TextBlock Text="{Binding ElementName=lst_happiness, Path=SelectedItem.get_res}" Grid.Column="1" Style="{StaticResource Img_info}"/>
+                        <Image  Source= "{Binding ElementName=lst_happiness, Path=SelectedItem.path}" Grid.Column="1" Style="{StaticResource Big_img}"/>
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Neutral" Height="30" Width="80" Margin="2,1,2,1">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="60*"/>
+                        <ColumnDefinition Width="40*"/>
+                    </Grid.ColumnDefinitions>
+                    <ListView Name="lst_neutral" ItemsSource="{Binding}" ItemTemplate="{StaticResource ItemTemplate}"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Column="0" BorderThickness="0,0,3,0" BorderBrush="#838e95" Background="#eaeaee">
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel IsItemsHost="True" Orientation="Horizontal"  />
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                    </ListView>
+                    <Grid Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="#eaeaee">
+                        <TextBlock Text="{Binding ElementName=lst_neutral, Path=SelectedItem.get_res}" Grid.Column="1" Style="{StaticResource Img_info}"/>
+                        <Image  Source= "{Binding ElementName=lst_neutral, Path=SelectedItem.path}" Grid.Column="1" Style="{StaticResource Big_img}"/>
+                    </Grid>
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+        <ProgressBar Name="ProgressBar" ValueChanged="ProgressBar_ValueChanged" HorizontalAlignment="Stretch" Height="30" VerticalAlignment="Top" Grid.Row="2" Grid.ColumnSpan="2" Minimum="0" Maximum="100" Margin="180,5,10,5" Foreground="#b79e89"/>
+        <TextBlock Name="ProgressText" HorizontalAlignment="Left" Margin="5,2,5,1" Grid.Row="2" Grid.Column="0" TextWrapping="Wrap" VerticalAlignment="Top" Height="30" Width="215" FontSize="15" Style="{StaticResource Img_info}"><Run Text="Analysis progress"/><Run Language="zh-cn" Text=":"/></TextBlock>
+
+    </Grid>
+</Window>
